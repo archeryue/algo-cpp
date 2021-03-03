@@ -24,7 +24,7 @@ int main() {
         double delta = dist - res;
         if (delta < 0 ||
             exp(-delta / t) >= ((double)rand()) / RAND_MAX) {
-            if (delta) {
+            if (delta > 0) {
                 cout << delta << " " << exp(-delta / t)  << endl;
             }
             cout << dist << " " << res << " " << t << endl;
