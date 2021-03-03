@@ -22,10 +22,9 @@ int main() {
         rand_solution = tsp_solution(current);
         double dist = tsp_result(region_map, rand_solution);
         double delta = dist - res;
-        if (delta < 0 ||
-            exp(-delta / t) >= ((double)rand()) / RAND_MAX) {
+        if (delta < 0 || exp(-delta / t) >= ((double)rand()) / RAND_MAX) {
             if (delta > 0) {
-                cout << delta << " " << exp(-delta / t)  << endl;
+                cout << delta << " " << exp(-delta / t) << endl;
             }
             cout << dist << " " << res << " " << t << endl;
             res = dist;
