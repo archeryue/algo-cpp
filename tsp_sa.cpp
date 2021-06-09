@@ -16,6 +16,7 @@ int main() {
     cout << "original result : " << res << endl;
     double t = 900;
     double r = 0.999999;
+    // 900 0.999999 final result: 82190.1km
     srand((unsigned)time(NULL));
     vector<int> rand_solution;
     while (t > 1) {
