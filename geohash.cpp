@@ -49,8 +49,8 @@ string GeoHash(double longitude, double latitude) {
         auto start = bitCode.begin() + i;
         auto end = bitCode.begin() + i + 5;
         vector<bool> bits(start, end);
-        i += 5;
         ret.push_back(base32(bits));
+        i += 5;
     }
     return ret;
 }
