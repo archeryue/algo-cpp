@@ -15,7 +15,6 @@ string Encode(vector<char> bytes) {
 	string ret;
 	int groupSize = bytes.size() / 3;
 	uint32_t buf = 0;
-	uint32_t mark = 0xfc000000;
 	// 24 bits for a group
 	for (int i = 0; i < groupSize; i++) {
 		for (int j = 0; j < 3; j++) {
@@ -23,8 +22,7 @@ string Encode(vector<char> bytes) {
 			buf = buf << 8;
 		}
 		for (int j = 0; j < 4; j++) {
-			uint32_t index = (buf & mark) >> 26;
-			ret.push_back(kTable[index]);
+			ret.push_back(kTable[buf >> 26]);
 			buf = buf << 6;
 		}
 	}
@@ -39,8 +37,7 @@ string Encode(vector<char> bytes) {
 			buf = buf << 8;
 		}
 		for (int i = 0; i < leftCount + 1; i++) {
-			uint32_t index = (buf & mark) >> 26;
-			ret.push_back(kTable[index]);
+			ret.push_back(kTable[buf >> 26]);
 			buf = buf << 6;
 		}
 		for (int i = 0; i < (3 - leftCount); i++) {
