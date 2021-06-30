@@ -13,35 +13,25 @@ vector<char> kTable {
 
 string Encode(vector<char> bytes) {
 	string ret;
-	int groupSize = bytes.size() / 3;
-	uint32_t buf = 0;
 	// 24 bits for a group
+	int groupSize = bytes.size() / 3;
+	// padding
+	groupSize += bytes.size() % 3 == 0 ? 0 : 1;
+	uint32_t buf = 0;
 	for (int i = 0; i < groupSize; i++) {
 		for (int j = 0; j < 3; j++) {
-			buf = buf | bytes[3 * i + j];
-			buf = buf << 8;
-		}
-		for (int j = 0; j < 4; j++) {
-			ret.push_back(kTable[buf >> 26]);
-			buf = buf << 6;
-		}
-	}
-
-	int leftCount = bytes.size() % 3; 
-	if (leftCount > 0) {
-		// handle padding, left 1 or 2
-		for (int i = 0; i < 3; i++) {
-			if (i < leftCount) {
-				buf = buf | bytes[groupSize * 3 + i];
+			if (3 * i + j < bytes.size()) {
+				buf = buf | bytes[3 * i + j];
 			}
 			buf = buf << 8;
 		}
-		for (int i = 0; i < leftCount + 1; i++) {
-			ret.push_back(kTable[buf >> 26]);
+		for (int j = 0; j < 4; j++) {
+			if ((4 * i + j + 1) * 6 <= bytes.size() * 8) {
+				ret.push_back(kTable[buf >> 26]);
+			} else {
+				ret.push_back('=');
+			}
 			buf = buf << 6;
-		}
-		for (int i = 0; i < (3 - leftCount); i++) {
-			ret.push_back('=');
 		}
 	}
 	return ret;
