@@ -1,9 +1,7 @@
-#ifndef BIN_INDEX_TREE
-#define BIN_INDEX_TREE
+#ifndef __BIN_INDEX_TREE__
+#define __BIN_INDEX_TREE__
 
 #include <vector>
-
-using namespace std;
 
 int lowbit(int index) {
     return index & (-index);
@@ -11,7 +9,7 @@ int lowbit(int index) {
 
 class BinaryIndexedTree {
    public:
-    BinaryIndexedTree(const vector<int>& orginal) : array(orginal.size() + 1) {
+    BinaryIndexedTree(const std::vector<int>& orginal) : array(orginal.size() + 1) {
         for (int i = 1; i < array.size(); i++) {
             for (int j = i; j > i - lowbit(i); j--) {
                 array[i] += orginal[j - 1];
@@ -42,7 +40,7 @@ class BinaryIndexedTree {
     }
 
    private:
-    vector<int> array;
+    std::vector<int> array;
 };
 
 #endif
