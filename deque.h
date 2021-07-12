@@ -24,10 +24,10 @@ class Deque {
     }
 
     ~Deque() {
-        for (int i = head.tableIndex; i <= tail.tableIndex; i++) {
-            delete(table[i]);
+        for (int i = tableLeft; i <= tableRight; i++) {
+            delete [] table[i];
         }
-        delete(table);
+        delete [] table;
     }
 
     int Size() {
