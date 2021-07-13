@@ -11,6 +11,9 @@ class Deque {
     class NodePtr; 
     const int tableInitSize = 0x04;
     const int nodeSize = 0x10;
+    void resize(bool left);
+    void checkLeft();
+    void checkRight();
 
  public:
     Deque() {
@@ -49,35 +52,8 @@ class Deque {
         return table[x][y];
     }
 
-    void resize(bool left) {
-        tableSize = tableSize + tableInitSize;
-        T** tmp = new T*[tableSize];            
-        int shift = left ? tableInitSize : 0;
-        for (int i = tableLeft; i <= tableRight; i++) {
-            tmp[shift + i] = table[i];
-        }
-        if (left) {
-            tableLeft += tableInitSize;
-            tableRight += tableInitSize;
-            head.tableIndex += tableInitSize;
-            tail.tableIndex += tableInitSize;
-        }
-        delete [] table;
-        table = tmp;
-    }
-
-    void checkLeft() {
-        if (head.tableIndex - 1 < tableLeft) {
-            if (tableLeft == 0) resize(true);
-            table[--tableLeft] = new T[nodeSize];
-        }
-    }
-
-    void checkRight() {
-        if (tail.tableIndex + 1 > tableRight) {
-            if (tableRight == tableSize - 1) resize(false);
-            table[++tableRight] = new T[nodeSize];
-        }
+    T& operator[](int index) {
+        return At(index);
     }
 
     void Push_front(T e) {
@@ -146,6 +122,40 @@ class Deque<T>::NodePtr {
     int tableIndex;
     int nodeIndex;
 };
+
+template<typename T>
+void Deque<T>::resize(bool left) {
+    tableSize = tableSize + tableInitSize;
+    T** tmp = new T*[tableSize];            
+    int shift = left ? tableInitSize : 0;
+    for (int i = tableLeft; i <= tableRight; i++) {
+        tmp[shift + i] = table[i];
+    }
+    if (left) {
+        tableLeft += tableInitSize;
+        tableRight += tableInitSize;
+        head.tableIndex += tableInitSize;
+        tail.tableIndex += tableInitSize;
+    }
+    delete [] table;
+    table = tmp;
+}
+
+template<typename T>
+void Deque<T>::checkLeft() {
+    if (head.tableIndex - 1 < tableLeft) {
+        if (tableLeft == 0) resize(true);
+        table[--tableLeft] = new T[nodeSize];
+    }
+}
+
+template<typename T>
+void Deque<T>::checkRight() {
+    if (tail.tableIndex + 1 > tableRight) {
+        if (tableRight == tableSize - 1) resize(false);
+        table[++tableRight] = new T[nodeSize];
+    }
+}
 
 } // end namespace
 

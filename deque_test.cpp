@@ -5,8 +5,7 @@ using namespace std;
 
 void print(archer::Deque<int>& que) {
     for (int i = 0; i < que.Size(); i++) {
-        cout << que.At(i) << " ";
-        que.At(i);
+        cout << que[i] << " ";
     }
     cout << endl;
 }
