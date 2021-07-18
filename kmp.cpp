@@ -28,7 +28,7 @@ int kmp(const string& text, const string& pattern) {
             j = dfa[j - 1];
         }
     }
-    return i;
+    return j == pattern.length() ? i - j : -1;
 }
 
 int main() {
@@ -36,6 +36,6 @@ int main() {
     string pattern;
     cout << "text: "; cin >> text;
     cout << "pattern: "; cin >> pattern;
-    cout << kmp(text, "abc") << endl;
+    cout << kmp(text, pattern) << endl;
     return 0;
 }
