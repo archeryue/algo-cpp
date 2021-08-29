@@ -6,18 +6,18 @@
 using namespace std;
 
 string longestPrefix(string s) {
-    vector<int> dfa(s.length(), 0);
+    vector<int> next(s.length(), 0);
     int i = 1, j = 0;
     while (i < s.length()) {
         if (s[i] == s[j]) {
-            dfa[i++] = ++j;
+            next[i++] = ++j;
         } else if (j == 0) {
             i++;
         } else {
-            j = dfa[j-1];
+            j = next[j-1];
         }
     }
-    return s.substr(0, dfa[dfa.size()-1]);
+    return s.substr(0, next[next.size()-1]);
 }
 
 int main() {

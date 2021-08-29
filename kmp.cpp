@@ -5,16 +5,16 @@
 using namespace std;
 
 int kmp(const string& text, const string& pattern) {
-    vector<int> dfa(pattern.length(), 0);
-    // build dfa
+    vector<int> next(pattern.length(), 0);
+    // build next
     int i = 1, j = 0;
     while (i < pattern.length()) {
         if (pattern[i] == pattern[j]) {
-            dfa[i++] = ++j;
+            next[i++] = ++j;
         } else if (j == 0) {
             i++;
         } else {
-            j = dfa[j - 1];
+            j = next[j - 1];
         }
     }
     // search
@@ -25,7 +25,7 @@ int kmp(const string& text, const string& pattern) {
         } else if (j == 0) {
             i++;
         } else {
-            j = dfa[j - 1];
+            j = next[j - 1];
         }
     }
     return j == pattern.length() ? i - j : -1;
