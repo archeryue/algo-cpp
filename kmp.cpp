@@ -4,12 +4,12 @@
 
 using namespace std;
 
-int kmp(const string& text, const string& pattern) {
-    vector<int> next(pattern.length(), 0);
+int kmp(const string& text, const string& query) {
+    vector<int> next(query.length(), 0);
     // build next
     int i = 1, j = 0;
-    while (i < pattern.length()) {
-        if (pattern[i] == pattern[j]) {
+    while (i < query.length()) {
+        if (query[i] == query[j]) {
             next[i++] = ++j;
         } else if (j == 0) {
             i++;
@@ -19,8 +19,8 @@ int kmp(const string& text, const string& pattern) {
     }
     // search
     i = 0, j = 0;
-    while (i < text.length() && j < pattern.length()) {
-        if (text[i] == pattern[j]) {
+    while (i < text.length() && j < query.length()) {
+        if (text[i] == query[j]) {
             i++; j++;
         } else if (j == 0) {
             i++;
@@ -28,13 +28,13 @@ int kmp(const string& text, const string& pattern) {
             j = next[j - 1];
         }
     }
-    return j == pattern.length() ? i - j : -1;
+    return j == query.length() ? i - j : -1;
 }
 
 int main() {
-    string text, pattern;
+    string text, query;
     cout << "text: "; cin >> text;
-    cout << "pattern: "; cin >> pattern;
-    cout << kmp(text, pattern) << endl;
+    cout << "query: "; cin >> query;
+    cout << kmp(text, query) << endl;
     return 0;
 }
