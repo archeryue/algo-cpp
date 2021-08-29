@@ -32,8 +32,7 @@ int kmp(const string& text, const string& pattern) {
 }
 
 int main() {
-    string text;
-    string pattern;
+    string text, pattern;
     cout << "text: "; cin >> text;
     cout << "pattern: "; cin >> pattern;
     cout << kmp(text, pattern) << endl;
