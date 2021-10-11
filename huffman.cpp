@@ -24,7 +24,10 @@ public:
         count = l->count + r->count;
     }
 
-    ~HNode() {}
+    ~HNode() {
+        delete left;
+        delete right;
+    }
 
     bool contains(char e) {
         return elements.count(e) > 0;
