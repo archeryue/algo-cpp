@@ -20,9 +20,11 @@ void game_loop() {
 
 int main() {
     initscr(); cbreak(); noecho(); clear();
-
-    game_loop();
-
+    WINDOW* win = newwin(10, 10, 1, 1);
+    box(win, 0, 0);
+    wrefresh(win);
+    wgetch(win);
+    //game_loop();
     endwin();
     return 0;
 }
