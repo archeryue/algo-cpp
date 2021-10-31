@@ -133,9 +133,10 @@ void draw_food(WINDOW* win, Food food) {
 }
 
 int main() {
-    initscr(); cbreak(); noecho(); clear();
+    initscr(); cbreak(); noecho();
     WINDOW* win = newwin(HEIGHT+2, WIDTH+2, 5, 5);
     box(win, 0, 0);
+    keypad(win, true);
     refresh();
     srand((unsigned)time(0));
     Snake* snake = new Snake(3);
@@ -146,7 +147,7 @@ int main() {
         snake->draw(win);
         draw_food(win, food);
         wrefresh(win);
-        timeout(1000);
+        wtimeout(win, 1);
         int key = wgetch(win);
         switch (key) {
             case KEY_UP:
@@ -173,7 +174,7 @@ int main() {
             alive = false;
         }
     }
-    timeout(-1);
+    wtimeout(win, -1);
     wgetch(win);
     endwin();
     return 0;
