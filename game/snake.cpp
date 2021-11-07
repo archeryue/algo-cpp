@@ -19,107 +19,106 @@ struct Food {
 };
 
 class Node {
-    public:
-        int x;
-        int y;
-        Node* next;
+public:
+    int x;
+    int y;
+    Node* next;
 
-        Node(int x, int y) : x(x), y(y), next(nullptr) {}
-        ~Node() {}
+    Node(int x, int y) : x(x), y(y), next(nullptr) {}
+    ~Node() {}
 };
 
 class Snake {
-    private:
-        int len;
-        int dirt;
-        Node* head;
+private:
+    int len;
+    int dirt;
+    Node* head;
 
-        void move_head() {
-            if (dirt < 2) {
-                head->y += dirt == 0 ? -1 : 1;
-            } else {
-                head->x += dirt == 2 ? -1 : 1;
-            }
+    void move_head() {
+        if (dirt < 2) {
+            head->y += dirt == 0 ? -1 : 1;
+        } else {
+            head->x += dirt == 2 ? -1 : 1;
         }
+    }
 
-    public:
-        Snake(int len) : len(len), dirt(D_RIGHT) {
-            head = new Node(len, 1);
-            Node* p = head;
-            for (int i = 1; i < len; i++) {
-                Node* node = new Node(len - i, 1);
-                p->next = node;
-                p = p->next;
-            }
+public:
+    Snake(int len) : len(len), dirt(D_RIGHT) {
+        head = new Node(len, 1);
+        Node* p = head;
+        for (int i = 1; i < len; i++) {
+            Node* node = new Node(len - i, 1);
+            p->next = node;
+            p = p->next;
         }
+    }
 
-        ~Snake() {
-            while (head != nullptr) {
-                Node* n = head->next;
-                delete head;
-                head = n;
-            }
+    ~Snake() {
+        while (head != nullptr) {
+            Node* n = head->next;
+            delete head;
+            head = n;
         }
+    }
 
-        bool hit_body() {
-            Node* p = head->next;
-            while (p != nullptr) {
-                if (head->x == p->x && head->y == p->y) 
-                    return true;
-                p = p->next;
-            }
-            return false;
+    bool hit_body() {
+        Node* p = head->next;
+        while (p != nullptr) {
+            if (head->x == p->x && head->y == p->y) 
+                return true;
+            p = p->next;
         }
+        return false;
+    }
 
-        bool hit_wall() {
-            return head->x > WIDTH || head->x < 1 || head->y > HEIGHT || head->y < 1;
-        }
+    bool hit_wall() {
+        return head->x > WIDTH || head->x < 1 || head->y > HEIGHT || head->y < 1;
+    }
 
-        bool hit_food(Food food) {
-            return head->x == food.x && head->y == food.y;
-        }
+    bool hit_food(Food food) {
+        return head->x == food.x && head->y == food.y;
+    }
 
-        void walk() {
-            Node* p = head;
-            Node front = *p;
-            while (p->next != nullptr) {
-                Node* n = p->next;
-                Node tmp = *n;
-                n->x = front.x;
-                n->y = front.y;
-                p = n;
-                front = tmp;
-            }
-            move_head();
+    void walk() {
+        Node* p = head;
+        Node front = *p;
+        while (p->next != nullptr) {
+            Node* n = p->next;
+            Node tmp = *n;
+            n->x = front.x;
+            n->y = front.y;
+            p = n; front = tmp;
         }
+        move_head();
+    }
 
-        void eat() {
-            Node* node = new Node(head->x, head->y);
-            node->next = head;
-            head = node;
-            move_head();
-            len++;
-        }
+    void eat() {
+        Node* node = new Node(head->x, head->y);
+        node->next = head;
+        head = node;
+        move_head();
+        len++;
+    }
 
-        void chg_dirt(int ndirt) {
-            dirt = ndirt;
-        }
+    void chg_dirt(int ndirt) {
+        dirt = ndirt;
+    }
 
-        void clear(WINDOW* win) {
-            Node* p = head;
-            while (p != nullptr) {
-                mvwaddch(win, p->y, p->x, ' ');
-                p = p->next;
-            }
+    void clear(WINDOW* win) {
+        Node* p = head;
+        while (p != nullptr) {
+            mvwaddch(win, p->y, p->x, ' ');
+            p = p->next;
         }
+    }
 
-        void draw(WINDOW* win) {
-            Node* p = head;
-            while (p != nullptr) {
-                mvwaddch(win, p->y, p->x, '+');
-                p = p->next;
-            }
+    void draw(WINDOW* win) {
+        Node* p = head;
+        while (p != nullptr) {
+            mvwaddch(win, p->y, p->x, '+');
+            p = p->next;
         }
+    }
 };
 
 Food rand_food() {
