@@ -36,9 +36,9 @@ class Snake {
 
         void move_head() {
             if (dirt < 2) {
-                head->x += dirt == 0 ? -1 : 1;
+                head->y += dirt == 0 ? -1 : 1;
             } else {
-                head->y += dirt == 2 ? -1 : 1;
+                head->x += dirt == 2 ? -1 : 1;
             }
         }
 
@@ -47,7 +47,7 @@ class Snake {
             head = new Node(len, 1);
             Node* p = head;
             for (int i = 1; i < len; i++) {
-                Node* node = new Node(len - i, i);
+                Node* node = new Node(len - i, 1);
                 p->next = node;
                 p = p->next;
             }
@@ -66,6 +66,7 @@ class Snake {
             while (p != nullptr) {
                 if (head->x == p->x && head->y == p->y) 
                     return true;
+                p = p->next;
             }
             return false;
         }
@@ -136,18 +137,17 @@ int main() {
     initscr(); cbreak(); noecho();
     WINDOW* win = newwin(HEIGHT+2, WIDTH+2, 5, 5);
     box(win, 0, 0);
-    keypad(win, true);
+    keypad(win, true); curs_set(0);
     refresh();
     srand((unsigned)time(0));
     Snake* snake = new Snake(3);
     Food food = rand_food();
     bool alive = true;
     while(alive) {
-        snake->clear(win);
         snake->draw(win);
         draw_food(win, food);
         wrefresh(win);
-        wtimeout(win, 1);
+        wtimeout(win, 100);
         int key = wgetch(win);
         switch (key) {
             case KEY_UP:
@@ -165,6 +165,7 @@ int main() {
             default:
                 break;
         }
+        snake->clear(win);
         snake->walk();
         if (snake->hit_food(food)) {
             snake->eat();
