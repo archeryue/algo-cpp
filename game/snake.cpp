@@ -135,9 +135,8 @@ void draw_food(WINDOW* win, Food food) {
 int main() {
     initscr(); cbreak(); noecho();
     WINDOW* win = newwin(HEIGHT+2, WIDTH+2, 5, 5);
-    box(win, 0, 0);
     keypad(win, true); curs_set(0);
-    refresh();
+    box(win, 0, 0); refresh();
     srand((unsigned)time(0));
     Snake* snake = new Snake(3);
     Food food = rand_food();
