@@ -10,7 +10,8 @@ class Deque {
  private:
     class NodePtr; 
     const int tableInitSize = 0x04;
-    const int nodeSize = 0x10;
+    const int nodePower = 0x04;
+    const int nodeSize = 1 << nodePower;
     void resize(bool left);
     void checkLeft();
     void checkRight();
@@ -46,8 +47,8 @@ class Deque {
         } else {
             index -= preSize;
             x++;
-            x += index >> 4;
-            y += index & 0xF;
+            x += index >> nodePower;
+            y += index & (nodeSize - 1);
         }
         return table[x][y];
     }
