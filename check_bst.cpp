@@ -11,16 +11,21 @@ class Node {
 };
 
 bool inner_check(Node* root, int min, int max) {
+    if (root == nullptr) {
+        return true;
+    }
     if (root->value > max || root->value < min) {
         return false;
     }
-    if (root->left != nullptr && root->left->value > root->value) {
-        return false;
+    bool left_ok = root->left == nullptr;
+    if (root->left && root->value > INT32_MIN) {
+        left_ok = inner_check(root->left, min, root->value-1);
     }
-    if (root->right != nullptr && root->right->value < root->value) {
-        return false;
+    bool right_ok = root->right == nullptr;
+    if (root->right && root->value < INT32_MAX) {
+        right_ok = inner_check(root->right, root->value+1, max);
     }
-    return inner_check(root->left, min, root->value) && inner_check(root->right, root->value, max);
+    return left_ok && right_ok;
 }
 
 bool check_bst(Node* root) {
