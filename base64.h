@@ -3,6 +3,7 @@
 
 #include <vector>
 #include <string>
+#include <stdexcept>
 
 std::string Encode(std::vector<uint8_t> bytes);
 
