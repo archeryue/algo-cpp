@@ -55,8 +55,8 @@ vector<int> tsp_init(const map<int, Region>& region_map) {
             solution.push_back(iter.first);
         }
     }
-    auto rd = random_device {};
-    auto rng = default_random_engine {rd()};
+    random_device rd;
+    default_random_engine rng {rd()};
     shuffle(begin(solution), end(solution), rng);
     return move(solution);
 }
