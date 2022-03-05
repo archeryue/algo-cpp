@@ -9,26 +9,26 @@ template<typename T>
 class Deque {
  private:
     class NodePtr; 
-    const int tableInitSize = 0x04;
-    const int nodePower = 0x04;
-    const int nodeSize = 1 << nodePower;
+    const int INIT_SIZE = 0x04;
+    const int NODE_POWER = 0x04;
+    const int NODE_SIZE = 1 << NODE_POWER;
     void resize(bool left);
     void checkLeft();
     void checkRight();
 
  public:
     Deque() {
-        tableSize = tableInitSize;
-        table = new T*[tableSize];
-        tableLeft = tableRight = (tableSize >> 1) - 1;
-        table[tableLeft] = new T[nodeSize];
-        head = NodePtr(tableLeft, 0);
-        tail = NodePtr(tableLeft, 0);
+        table_size = INIT_SIZE;
+        table = new T*[table_size];
+        table_left = table_right = (table_size >> 1) - 1;
+        table[table_left] = new T[NODE_SIZE];
+        head = NodePtr(table_left, 0);
+        tail = NodePtr(table_left, 0);
         size = 0;
     }
 
     ~Deque() {
-        for (int i = tableLeft; i <= tableRight; i++) {
+        for (int i = table_left; i <= table_right; i++) {
             delete [] table[i];
         }
         delete [] table;
@@ -39,16 +39,16 @@ class Deque {
     }
 
     T& At(int index) {
-        int x = head.tableIndex;
+        int x = head.table_index;
         int y = 0;
-        int preSize = nodeSize - head.nodeIndex;
-        if (index < preSize) {
-            y = head.nodeIndex + index;
+        int psize = NODE_SIZE - head.node_index;
+        if (index < psize) {
+            y = head.node_index + index;
         } else {
-            index -= preSize;
+            index -= psize;
             x++;
-            x += index >> nodePower;
-            y += index & (nodeSize - 1);
+            x += index >> NODE_POWER;
+            y += index & (NODE_SIZE - 1);
         }
         return table[x][y];
     }
@@ -57,49 +57,49 @@ class Deque {
         return At(index);
     }
 
-    void Push_front(T e) {
-        if (head.nodeIndex == 0) {
+    void PushFront(T e) {
+        if (head.node_index == 0) {
             checkLeft();
-            head.tableIndex--;
-            head.nodeIndex = nodeSize;
+            head.table_index--;
+            head.node_index = NODE_SIZE;
         }
-        table[head.tableIndex][--head.nodeIndex] = e;
+        table[head.table_index][--head.node_index] = e;
         size++;
     }
 
-    void Pop_front() {
+    void PopFront() {
         if (size == 0) {
             std::cout << "Invalid" << std::endl;
             return;
         }
-        if (head.nodeIndex == nodeSize - 1) {
-            head.tableIndex++;
-            head.nodeIndex = -1;
+        if (head.node_index == NODE_SIZE - 1) {
+            head.table_index++;
+            head.node_index = -1;
         }
-        head.nodeIndex++;
+        head.node_index++;
         size--;
     }
 
-    void Push_back(T e) {
-        if (tail.nodeIndex == nodeSize) {
+    void PushBack(T e) {
+        if (tail.node_index == NODE_SIZE) {
             checkRight();
-            tail.tableIndex++;
-            tail.nodeIndex = 0;
+            tail.table_index++;
+            tail.node_index = 0;
         }
-        table[tail.tableIndex][tail.nodeIndex++] = e;
+        table[tail.table_index][tail.node_index++] = e;
         size++;
     }
 
-    void Pop_back() {
+    void PopBack() {
         if (size == 0) {
             std::cout << "Invalid" << std::endl;
             return;
         }
-        if (tail.nodeIndex == 0) {
-            tail.tableIndex--;
-            tail.nodeIndex = nodeSize;
+        if (tail.node_index == 0) {
+            tail.table_index--;
+            tail.node_index = NODE_SIZE;
         }
-        tail.nodeIndex--;
+        tail.node_index--;
         size--;
     }
 
@@ -107,9 +107,9 @@ class Deque {
     NodePtr head;
     NodePtr tail;
     int size;
-    int tableSize;
-    int tableLeft;
-    int tableRight;
+    int table_size;
+    int table_left;
+    int table_right;
     T** table;
 };
 
@@ -117,26 +117,26 @@ template<typename T>
 class Deque<T>::NodePtr {
  public:
     NodePtr() = default;
-    NodePtr(int x, int y) : tableIndex(x), nodeIndex(y) {}
+    NodePtr(int x, int y) : table_index(x), node_index(y) {}
     ~NodePtr() {}
 
-    int tableIndex;
-    int nodeIndex;
+    int table_index;
+    int node_index;
 };
 
 template<typename T>
 void Deque<T>::resize(bool left) {
-    tableSize = tableSize + tableInitSize;
-    T** tmp = new T*[tableSize];            
-    int shift = left ? tableInitSize : 0;
-    for (int i = tableLeft; i <= tableRight; i++) {
+    table_size = table_size + INIT_SIZE;
+    T** tmp = new T*[table_size];            
+    int shift = left ? INIT_SIZE : 0;
+    for (int i = table_left; i <= table_right; i++) {
         tmp[shift + i] = table[i];
     }
     if (left) {
-        tableLeft += tableInitSize;
-        tableRight += tableInitSize;
-        head.tableIndex += tableInitSize;
-        tail.tableIndex += tableInitSize;
+        table_left += INIT_SIZE;
+        table_right += INIT_SIZE;
+        head.table_index += INIT_SIZE;
+        tail.table_index += INIT_SIZE;
     }
     delete [] table;
     table = tmp;
@@ -144,17 +144,17 @@ void Deque<T>::resize(bool left) {
 
 template<typename T>
 void Deque<T>::checkLeft() {
-    if (head.tableIndex - 1 < tableLeft) {
-        if (tableLeft == 0) resize(true);
-        table[--tableLeft] = new T[nodeSize];
+    if (head.table_index - 1 < table_left) {
+        if (table_left == 0) resize(true);
+        table[--table_left] = new T[NODE_SIZE];
     }
 }
 
 template<typename T>
 void Deque<T>::checkRight() {
-    if (tail.tableIndex + 1 > tableRight) {
-        if (tableRight == tableSize - 1) resize(false);
-        table[++tableRight] = new T[nodeSize];
+    if (tail.table_index + 1 > table_right) {
+        if (table_right == table_size - 1) resize(false);
+        table[++table_right] = new T[NODE_SIZE];
     }
 }
 

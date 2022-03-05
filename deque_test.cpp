@@ -13,22 +13,22 @@ void print(archer::Deque<int>& que) {
 int main() {
     archer::Deque<int> que;
     for (int i = 0; i < 60; i++) {
-        que.Push_back(i);
+        que.PushBack(i);
     }
     print(que);
     for (int i = 0; i > -20; i--) {
-        que.Push_front(i);
+        que.PushFront(i);
     }
     print(que);
     for (int i = 0; i < 10; i++) {
-        que.Pop_front();
+        que.PopFront();
     }
     for (int i = 0; i < 20; i++) {
-        que.Pop_back();
+        que.PopBack();
     }
     print(que);
     while (que.Size() > 0) {
-        que.Pop_front();
+        que.PopFront();
     }
     print(que);
     return 0;
