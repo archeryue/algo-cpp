@@ -4,18 +4,17 @@
 
 using namespace std;
 
-volatile int counter = 0;
+volatile int cnt = 0;
+static mutex cnt_mtx;
 
-static mutex cnt_mutex;
-
-void RoundPrint(int max, int index) {
-    while (counter < max) {
-        cnt_mutex.lock();
-        if (counter < max && counter % 2 == index) {
-            cout << counter << endl;
-            counter++;
+void RoundPrint(int max, int idx) {
+    while (cnt < max) {
+        cnt_mtx.lock();
+        if (cnt < max && cnt % 2 == idx) {
+            cout << cnt++ << endl;
         }
-        cnt_mutex.unlock();
+        cnt_mtx.unlock();
+        this_thread::yield();
     }
 }
 
