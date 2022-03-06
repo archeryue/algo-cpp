@@ -1,16 +1,15 @@
-#include <atomic>
 #include <thread>
 
 using namespace std;
 
-atomic<int> cnt(0);
+volatile int cnt = 0;
 
 void RoundPrint(const int max, const int idx) {
-    while (cnt.load() < max) {
-        while (cnt.load() % 2 != idx) this_thread::yield();
-        if (cnt.load() < max) {
-            printf("t%d:%d\n", idx, cnt.load());
-            cnt.fetch_add(1);
+    while (cnt < max) {
+        while (cnt % 2 != idx) this_thread::yield();
+        if (cnt < max) {
+            printf("t%d:%d\n", idx, cnt);
+            cnt++;
         }
     }
 }
