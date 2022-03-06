@@ -1,27 +1,24 @@
-#include <iostream>
+#include <atomic>
 #include <thread>
-#include <mutex>
 
 using namespace std;
 
-volatile int cnt = 0;
-static mutex cnt_mtx;
+atomic<int> cnt(0);
 
-void RoundPrint(int max, int idx) {
-    while (cnt < max) {
-        cnt_mtx.lock();
-        if (cnt < max && cnt % 2 == idx) {
-            cout << cnt++ << endl;
+void RoundPrint(const int max, const int idx) {
+    while (cnt.load() < max) {
+        while (cnt.load() % 2 != idx) this_thread::yield();
+        if (cnt.load() < max) {
+            printf("t%d:%d\n", idx, cnt.load());
+            cnt.fetch_add(1);
         }
-        cnt_mtx.unlock();
-        this_thread::yield();
     }
 }
 
 int main() {
-    thread t1{RoundPrint, 100, 0};
-    thread t2{RoundPrint, 100, 1};
+    thread t0{RoundPrint, 100, 0};
+    thread t1{RoundPrint, 100, 1};
+    t0.join();
     t1.join();
-    t2.join();
     return 0;
 }
