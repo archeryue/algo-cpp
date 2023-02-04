@@ -9,9 +9,9 @@ template<typename T>
 class Deque {
  private:
     class NodePtr; 
-    const int INIT_SIZE = 0x04;
-    const int NODE_POWER = 0x04;
-    const int NODE_SIZE = 1 << NODE_POWER;
+    static const int INIT_SIZE = 0x04;
+    static const int NODE_POWER = 0x04;
+    static const int NODE_SIZE = 1 << NODE_POWER;
     void resize(bool left);
     void checkLeft();
     void checkRight();
