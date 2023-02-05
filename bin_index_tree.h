@@ -3,7 +3,7 @@
 
 #include <vector>
 
-int lowbit(int index) {
+inline int lowbit(int index) {
     return index & (-index);
 }
 
