@@ -1,4 +1,3 @@
-#include <cstddef>
 #include <boost/coroutine/symmetric_coroutine.hpp>
 #include <iostream>
 #include <vector>

@@ -1,5 +1,5 @@
-#include <iostream>
 #include <boost/context/continuation.hpp>
+#include <iostream>
 
 int main() {
     namespace ctx = boost::context;
