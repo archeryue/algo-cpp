@@ -21,5 +21,6 @@ int main() {
         std::cout << a << " ";
         lambcc = lambcc.resume();
     }
+
     std::cout << std::endl;
 }
