@@ -8,28 +8,69 @@ class Hamming {
 public:
     static vector<int> encode(vector<int> message) {
         vector<int> result;
+        // leave space for parity bits
         int r = 0;
-        for (int i = 0; i < message.size(); i++) {
-            if (i == (1 << r) - 1) {
+        for (int i = 0; i < message.size(); ) {
+            if (result.size() == (1 << r) - 1) {
                 result.push_back(0);
                 r++;
+            } else {
+                result.push_back(message[i++]);
             }
-            result.push_back(message[i]);
         }
-        for (int i = 0; i < result.size(); i++) {
-            if (result[i] == 0) {
-                int count = 0;
-                for (int j = i + 1; j < result.size(); j++) {
-                    if (result[j] == 1) {
-                        count++;
-                    }
-                    if (count == i + 1) {
-                        result[i] = count % 2;
-                        break;
+        // calculate and fill the parity bits
+        for (int i = 0; i < r; i++) {
+            int count = 0;
+            for (int j = (1 << i) - 1; j < result.size(); j += (1 << (i + 1))) {
+                for (int k = 0; k < (1 << i); k++) {
+                    if (j + k < result.size()) {
+                        count += result[j + k];
                     }
                 }
             }
+            result[(1 << i) - 1] = count % 2;
         }
         return result;
     }
+
+    static int bad_bit(vector<int> message) {
+        int bad = 0;
+        int r = 0;
+        while ((1 << r) < message.size()) {
+            int step = (1 << r);
+            int count = 0;
+            for (int i = step - 1; i < message.size(); i += step * 2) {
+                for (int j = 0; j < step; j++) {
+                    if (i + j < message.size()) {
+                        count += message[i + j];
+                    }
+                }
+            }
+            if (count % 2 != 0) {
+                bad += step;
+            }
+            r++;
+        }
+        return bad - 1;
+    }
 };
+
+int main() {
+    vector<int> message = {1, 0, 0, 1, 1, 0, 1, 0};
+    cout << "message : ";
+    for (int i = 0; i < message.size(); i++) {
+        cout << message[i] << " ";
+    }
+    cout << endl << "encoded : ";
+    vector<int> encoded = Hamming::encode(message);
+    for (int i = 0; i < encoded.size(); i++) {
+        cout << encoded[i] << " ";
+    }
+    cout << endl;
+    cout << "check bad bit : " << endl;
+    cout << "bad bit index : " << Hamming::bad_bit(encoded) << endl;
+    cout << "change endoded[9] to 1" << endl;
+    encoded[9] = 1;
+    cout << "bad bit index : " << Hamming::bad_bit(encoded) << endl;
+    return 0;
+}
